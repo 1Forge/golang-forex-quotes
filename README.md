@@ -25,6 +25,16 @@ Please see the list of known issues here: [Issues](https://github.com/1Forge/gol
 
 ## Usage
 
+### Import client and set API Key
+```go
+import (
+	Forex "../golang-forex-quotes"
+	"fmt"
+)
+
+var api_key = "YOUR_API_KEY"
+```
+
 ### Get the list of available symbols:
 ```go
 symbol_list := Forex.GetSymbols(api_key)
