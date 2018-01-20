@@ -13,6 +13,7 @@ Please see examples in the [/examples](https://github.com/1Forge/golang-forex-qu
     - [Get quotes for specific symbols](#get-quotes-for-specified-symbols)
     - [Convert from one currency to another](#convert-from-one-currency-to-another)
     - [Check if the market is open](#check-if-the-market-is-open)
+- [Contributing](#contributing)
 - [Support / Contact](#support-and-contact)
 - [License / Terms](#license-and-terms)
 
@@ -70,6 +71,8 @@ if Forex.MarketIsOpen(api_key) {
     fmt.Println("Market is closed")
 }
 ```
+## Contributing
+Thank you for considering contributing! Any issues, bug fixes, suggestions, improvements or help in any other way is always appreciated.  Please feel free to open an issue or create a pull request.
 
 ## Support and Contact
 Please contact me at contact@1forge.com if you have any questions or requests.
