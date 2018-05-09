@@ -13,7 +13,7 @@ import (
 
 func main() {
 	//Initialize the client
-	client := Forex.NewClient(apiKey)
+	client := Forex.NewClient("YOUR_API_KEY")
 
 	//Get the list of available symbols
 	symbolList, e := client.GetSymbols()
