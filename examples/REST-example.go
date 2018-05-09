@@ -6,21 +6,32 @@
 package main
 
 import (
-	Forex "../golang-forex-quotes"
+	Forex "github.com/1Forge/golang-forex-quotes"
 	"fmt"
+	"log"
 )
 
-var api_key = "YOUR_API_KEY"
-
 func main() {
+	//Initialize the client
+	client := Forex.NewClient(apiKey)
 
 	//Get the list of available symbols
-	symbol_list := Forex.GetSymbols(api_key)
-	fmt.Println(symbol_list)
+	symbolList, e := client.GetSymbols()
+
+	if e != nil {
+		log.Fatal(e)
+	}
+
+	fmt.Println(symbolList)
 
 	//Get quotes for specified symbols
-	symbols := []string {"EURUSD", "AUDJPY", "GBPCHF"}
-	quotes := Forex.GetQuotes(symbols, api_key)
+	symbols := []string{"EURUSD", "AUDJPY", "GBPCHF"}
+	quotes, e := client.GetQuotes(symbols)
+
+	if e != nil {
+		log.Fatal(e)
+	}
+
 	for _, quote := range quotes {
 		fmt.Println(quote.Symbol)
 		fmt.Println(quote.Bid)
@@ -30,15 +41,38 @@ func main() {
 	}
 
 	//Convert from one currency to another
-	conversion_result := Forex.Convert("EUR", "USD", 100, api_key)
-	fmt.Println(conversion_result.Value)
-	fmt.Println(conversion_result.Text)
-	fmt.Println(conversion_result.Timestamp)
+	conversionResult, e := client.Convert("EUR", "USD", 100)
+
+	if e != nil {
+		log.Fatal(e)
+	}
+
+	fmt.Println(conversionResult.Value)
+	fmt.Println(conversionResult.Text)
+	fmt.Println(conversionResult.Timestamp)
 
 	//Get the market status
-	if Forex.MarketIsOpen(api_key) {
+	marketIsOpen, e := client.MarketIsOpen()
+
+	if e != nil {
+		log.Fatal(e)
+	}
+
+	if marketIsOpen {
 		fmt.Println("Market is open")
 	} else {
 		fmt.Println("Market is closed")
 	}
+
+	//Check quota
+	quota, e := client.GetQuota()
+
+	if e != nil {
+		log.Fatal(e)
+	}
+
+	fmt.Println("Quota used", quota.QuotaUsed)
+	fmt.Println("Quota limit", quota.QuotaLimit)
+	fmt.Println("Quota remaining", quota.QuotaRemaining)
+	fmt.Println("Hours until reset", quota.HoursUntilReset)
 }
