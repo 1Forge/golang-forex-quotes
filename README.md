@@ -26,7 +26,7 @@ Please see the list of known issues here: [Issues](https://github.com/1Forge/gol
 
 ## Installation
 
-`go get https://github.com/1Forge/golang-forex-quotes.git`
+`go get github.com/1Forge/golang-forex-quotes`
 
 ## Usage
 
