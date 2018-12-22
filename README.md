@@ -28,16 +28,14 @@ Please see the list of known issues here: [Issues](https://github.com/1Forge/gol
 ```go
 import (
 	Forex "github.com/1Forge/golang-forex-quotes"
-	"fmt"
 )
-
-client := Forex.NewClient("YOUR_API_KEY")
-
 ```
 
 ### WebSocket API
 ```go
 func main() {
+    client := Forex.CreateClient("YOUR_API_KEY")
+
 	symbols := []string{"BTCJPY", "AUDJPY", "GBPCHF"}
 
 	// Specify the update handler
@@ -85,11 +83,15 @@ func main() {
 
 	// Disconnect
     client.Disconnect()
+}
 ```
 
 ### RESTful API
 
 ```go
+func main() {
+    client := Forex.CreateClient("YOUR_API_KEY")
+
     // Get the list of symbols
 	symbols, e := client.GetSymbols()
 
@@ -136,6 +138,7 @@ func main() {
 	fmt.Println("Quota limit", quota.QuotaLimit)
 	fmt.Println("Quota remaining", quota.QuotaRemaining)
     fmt.Println("Hours until reset", quota.HoursUntilReset)
+}
 ```
 
 ## Support and Contact
