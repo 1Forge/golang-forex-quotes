@@ -38,12 +38,12 @@ import (
 
 ```go
 func main() {
-    client := Forex.CreateClient("YOUR_API_KEY")
+    client := Forex.CreateForgeClient("YOUR_API_KEY")
 
 	symbols := []string{"BTCJPY", "AUDJPY", "GBPCHF"}
 
 	// Specify the update handler
-	client.OnUpdate(func(q Forge.Quote) {
+	client.OnUpdate(func(q Forex.Quote) {
 		fmt.Println(q)
 	})
 
