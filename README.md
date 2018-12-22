@@ -2,7 +2,6 @@
 
 golang-forex-quotes is a Golang library for fetching realtime forex quotes.
 Any contributions or issues opened are greatly appreciated.
-Please see examples in the [/examples](https://github.com/1Forge/golang-forex-quotes/tree/master/examples) folder.
 
 # Table of Contents
 
