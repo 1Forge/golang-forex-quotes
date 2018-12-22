@@ -42,52 +42,52 @@ import (
 func main() {
     client := Forex.CreateForgeClient("YOUR_API_KEY")
 
-	symbols := []string{"BTCJPY", "AUDJPY", "GBPCHF"}
+    symbols := []string{"BTCJPY", "AUDJPY", "GBPCHF"}
 
-	// Specify the update handler
-	client.OnUpdate(func(q Forex.Quote) {
-		fmt.Println(q)
-	})
+    // Specify the update handler
+    client.OnUpdate(func(q Forex.Quote) {
+        fmt.Println(q)
+    })
 
-	// Specify the message handler
-	client.OnMessage(func(m string) {
-		fmt.Println(m)
-	})
+    // Specify the message handler
+    client.OnMessage(func(m string) {
+        fmt.Println(m)
+    })
 
-	// Specify the disconnection handler
-	client.OnDisconnection(func() {
-		fmt.Println("Disconnected")
-	})
+    // Specify the disconnection handler
+    client.OnDisconnection(func() {
+        fmt.Println("Disconnected")
+    })
 
-	// Specify the login success handler
-	client.OnLoginSuccess(func() {
-		fmt.Println("Successfully logged in")
+    // Specify the login success handler
+    client.OnLoginSuccess(func() {
+        fmt.Println("Successfully logged in")
 
-		// Subscribe to some symbols
-		client.SubscribeTo(symbols)
+        // Subscribe to some symbols
+        client.SubscribeTo(symbols)
 
-		// Subscribe to all symbols
-		client.SubscribeToAll()
-	})
+        // Subscribe to all symbols
+        client.SubscribeToAll()
+    })
 
-	// Specify the connection handler
-	client.OnConnection(func() {
-		fmt.Println("Connected")
-	})
+    // Specify the connection handler
+    client.OnConnection(func() {
+        fmt.Println("Connected")
+    })
 
-	// Connect to the socket server
-	client.Connect()
+    // Connect to the socket server
+    client.Connect()
 
-	// Wait 25 seconds
-	time.Sleep(25 * time.Second)
+    // Wait 25 seconds
+    time.Sleep(25 * time.Second)
 
-	// Unsubscribe from some symbols
+    // Unsubscribe from some symbols
     client.UnsubscribeFrom(symbols)
 
-	// Unsubscribe from all symbols
+    // Unsubscribe from all symbols
     client.UnsubscribeFromAll()
 
-	// Disconnect
+    // Disconnect
     client.Disconnect()
 }
 ```
@@ -99,50 +99,50 @@ func main() {
     client := Forex.CreateClient("YOUR_API_KEY")
 
     // Get the list of symbols
-	symbols, e := client.GetSymbols()
+    symbols, e := client.GetSymbols()
 
-	if e != nil {
-		log.Fatal(e)
-	}
+    if e != nil {
+        log.Fatal(e)
+    }
 
-	// Gets quotes
-	quotes, e := client.GetQuotes(symbols)
+    // Gets quotes
+    quotes, e := client.GetQuotes(symbols)
 
-	if e != nil {
-		log.Fatal(e)
-	}
+    if e != nil {
+        log.Fatal(e)
+    }
 
-	fmt.Println(quotes)
+    fmt.Println(quotes)
 
-	// Convert currencies
-	conversion, e := client.Convert("EUR", "USD", 100)
-	if e != nil {
-		log.Fatal(e)
-	}
+    // Convert currencies
+    conversion, e := client.Convert("EUR", "USD", 100)
+    if e != nil {
+        log.Fatal(e)
+    }
 
-	fmt.Println(conversion.Value)
-	fmt.Println(conversion.Text)
-	fmt.Println(conversion.Timestamp)
+    fmt.Println(conversion.Value)
+    fmt.Println(conversion.Text)
+    fmt.Println(conversion.Timestamp)
 
-	// Get the market status
-	marketStatus, e := client.GetMarketStatus()
+    // Get the market status
+    marketStatus, e := client.GetMarketStatus()
 
-	if e != nil {
-		log.Fatal(e)
-	}
+    if e != nil {
+        log.Fatal(e)
+    }
 
-	fmt.Println("Is the market open?", marketStatus.MarketIsOpen)
+    fmt.Println("Is the market open?", marketStatus.MarketIsOpen)
 
-	// Get current quota
-	quota, e := client.GetQuota()
+    // Get current quota
+    quota, e := client.GetQuota()
 
-	if e != nil {
-		log.Fatal(e)
-	}
+    if e != nil {
+        log.Fatal(e)
+    }
 
-	fmt.Println("Quota used", quota.QuotaUsed)
-	fmt.Println("Quota limit", quota.QuotaLimit)
-	fmt.Println("Quota remaining", quota.QuotaRemaining)
+    fmt.Println("Quota used", quota.QuotaUsed)
+    fmt.Println("Quota limit", quota.QuotaLimit)
+    fmt.Println("Quota remaining", quota.QuotaRemaining)
     fmt.Println("Hours until reset", quota.HoursUntilReset)
 }
 ```
