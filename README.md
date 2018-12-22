@@ -5,6 +5,7 @@ Any contributions or issues opened are greatly appreciated.
 Please see examples in the [/examples](https://github.com/1Forge/golang-forex-quotes/tree/master/examples) folder.
 
 # Table of Contents
+
 - [Requirements](#requirements)
 - [Known Issues](#known-issues)
 - [Installation](#installation)
@@ -13,9 +14,11 @@ Please see examples in the [/examples](https://github.com/1Forge/golang-forex-qu
 - [License / Terms](#license-and-terms)
 
 ## Requirements
-* An API key which you can obtain at http://1forge.com/forex-data-api
+
+- An API key which you can obtain at http://1forge.com/forex-data-api
 
 ## Known Issues
+
 Please see the list of known issues here: [Issues](https://github.com/1Forge/golang-forex-quotes/issues)
 
 ## Installation
@@ -25,6 +28,7 @@ Please see the list of known issues here: [Issues](https://github.com/1Forge/gol
 ## Usage
 
 ### Initialize the client
+
 ```go
 import (
 	Forex "github.com/1Forge/golang-forex-quotes"
@@ -32,6 +36,7 @@ import (
 ```
 
 ### WebSocket API
+
 ```go
 func main() {
     client := Forex.CreateClient("YOUR_API_KEY")
@@ -76,10 +81,10 @@ func main() {
 	time.Sleep(25 * time.Second)
 
 	// Unsubscribe from some symbols
-	client.UnsubscribeFrom(symbols)
+    client.UnsubscribeFrom(symbols)
 
 	// Unsubscribe from all symbols
-	client.UnsubscribeFromAll()
+    client.UnsubscribeFromAll()
 
 	// Disconnect
     client.Disconnect()
@@ -142,7 +147,9 @@ func main() {
 ```
 
 ## Support and Contact
+
 Please contact me at contact@1forge.com if you have any questions or requests.
 
 ## License and Terms
+
 This library is provided without warranty under the MIT license.
