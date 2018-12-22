@@ -13,8 +13,7 @@ Please see examples in the [/examples](https://github.com/1Forge/golang-forex-qu
 - [License / Terms](#license-and-terms)
 
 ## Requirements
-* An API key which you can obtain for free at http://1forge.com/forex-data-api
-* Golang
+* An API key which you can obtain at http://1forge.com/forex-data-api
 
 ## Known Issues
 Please see the list of known issues here: [Issues](https://github.com/1Forge/golang-forex-quotes/issues)
