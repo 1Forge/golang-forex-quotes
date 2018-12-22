@@ -9,10 +9,6 @@ Please see examples in the [/examples](https://github.com/1Forge/golang-forex-qu
 - [Known Issues](#known-issues)
 - [Installation](#installation)
 - [Usage](#usage)
-    - [List of Symbols available](#get-the-list-of-available-symbols)
-    - [Get quotes for specific symbols](#get-quotes-for-specified-symbols)
-    - [Convert from one currency to another](#convert-from-one-currency-to-another)
-    - [Check if the market is open](#check-if-the-market-is-open)
 - [Support / Contact](#support-and-contact)
 - [License / Terms](#license-and-terms)
 
@@ -37,78 +33,110 @@ import (
 )
 
 client := Forex.NewClient("YOUR_API_KEY")
-```
-
-### Get the list of available symbols:
-```go
-symbolList, e := client.GetSymbols()
-
-if e != nil {
-    log.Fatal(e)
-}
-
-fmt.Println(symbolList)
 
 ```
 
-### Get quotes for specified symbols:
+### WebSocket API
 ```go
-symbols := []string {"EURUSD", "AUDJPY", "GBPCHF"}
-quotes, e := client.GetQuotes(symbols)
+func main() {
+	symbols := []string{"BTCJPY", "AUDJPY", "GBPCHF"}
 
-if e != nil {
-    log.Fatal(e)
-}
+	// Specify the update handler
+	client.OnUpdate(func(q Forge.Quote) {
+		fmt.Println(q)
+	})
 
-for _, quote := range quotes {
-    fmt.Println(quote.Symbol)
-    fmt.Println(quote.Bid)
-    fmt.Println(quote.Ask)
-    fmt.Println(quote.Price)
-    fmt.Println(quote.Timestamp)
-}
+	// Specify the message handler
+	client.OnMessage(func(m string) {
+		fmt.Println(m)
+	})
+
+	// Specify the disconnection handler
+	client.OnDisconnection(func() {
+		fmt.Println("Disconnected")
+	})
+
+	// Specify the login success handler
+	client.OnLoginSuccess(func() {
+		fmt.Println("Successfully logged in")
+
+		// Subscribe to some symbols
+		client.SubscribeTo(symbols)
+
+		// Subscribe to all symbols
+		client.SubscribeToAll()
+	})
+
+	// Specify the connection handler
+	client.OnConnection(func() {
+		fmt.Println("Connected")
+	})
+
+	// Connect to the socket server
+	client.Connect()
+
+	// Wait 25 seconds
+	time.Sleep(25 * time.Second)
+
+	// Unsubscribe from some symbols
+	client.UnsubscribeFrom(symbols)
+
+	// Unsubscribe from all symbols
+	client.UnsubscribeFromAll()
+
+	// Disconnect
+    client.Disconnect()
 ```
 
-### Convert from one currency to another:
+### RESTful API
+
 ```go
-conversionResult, e := client.Convert("EUR", "USD", 100)
+    // Get the list of symbols
+	symbols, e := client.GetSymbols()
 
-if e != nil {
-    log.Fatal(e)
-}
+	if e != nil {
+		log.Fatal(e)
+	}
 
-fmt.Println(conversionResult.Value)
-fmt.Println(conversionResult.Text)
-fmt.Println(conversionResult.Timestamp)
-```
+	// Gets quotes
+	quotes, e := client.GetQuotes(symbols)
 
-### Check if the market is open:
-```go
-marketIsOpen, e := client.MarketIsOpen()
+	if e != nil {
+		log.Fatal(e)
+	}
 
-if e != nil {
-    log.Fatal(e)
-}
+	fmt.Println(quotes)
 
-if marketIsOpen {
-    fmt.Println("Market is open")
-} else {
-    fmt.Println("Market is closed")
-}
-```
+	// Convert currencies
+	conversion, e := client.Convert("EUR", "USD", 100)
+	if e != nil {
+		log.Fatal(e)
+	}
 
-### Quota used
-```go
-quota, e := client.GetQuota()
+	fmt.Println(conversion.Value)
+	fmt.Println(conversion.Text)
+	fmt.Println(conversion.Timestamp)
 
-if e != nil {
-    log.Fatal(e)
-}
+	// Get the market status
+	marketStatus, e := client.GetMarketStatus()
 
-fmt.Println("Quota used", quota.QuotaUsed)
-fmt.Println("Quota limit", quota.QuotaLimit)
-fmt.Println("Quota remaining", quota.QuotaRemaining)
-fmt.Println("Hours until reset", quota.HoursUntilReset)
+	if e != nil {
+		log.Fatal(e)
+	}
+
+	fmt.Println("Is the market open?", marketStatus.MarketIsOpen)
+
+	// Get current quota
+	quota, e := client.GetQuota()
+
+	if e != nil {
+		log.Fatal(e)
+	}
+
+	fmt.Println("Quota used", quota.QuotaUsed)
+	fmt.Println("Quota limit", quota.QuotaLimit)
+	fmt.Println("Quota remaining", quota.QuotaRemaining)
+    fmt.Println("Hours until reset", quota.HoursUntilReset)
 ```
 
 ## Support and Contact

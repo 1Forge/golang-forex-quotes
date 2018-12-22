@@ -1,8 +1,3 @@
-/*
- * This library is provided without warranty under the MIT license
- * Created by Jacob Davis <jacob@1forge.com>
- */
-
 package golang_forex_quotes
 
 import (
@@ -14,49 +9,10 @@ import (
 	"errors"
 )
 
-type Conversion struct {
-	Value     float32
-	Text      string
-	Timestamp int
-}
-
-type Quota struct {
-	QuotaUsed       int `json:"quota_used"`
-	QuotaLimit      int `json:"quota_limit"` //0 = Unlimited
-	QuotaRemaining  int `json:"quota_remaining"`
-	HoursUntilReset int `json:"hours_until_reset"`
-}
-
-type UnlimitedQuota struct {
-	QuotaUsed       int    `json:"quota_used"`
-	QuotaLimit      string `json:"quota_limit"`
-	QuotaRemaining  string `json:"quota_remaining"`
-	HoursUntilReset int    `json:"hours_until_reset"`
-}
-
-type MarketStatus struct {
-	MarketIsOpen bool `json:"market_is_open"`
-}
-
-type Quote struct {
-	Symbol    string
-	Bid       float32
-	Ask       float32
-	Price     float32
-	Timestamp int
-}
-
-type ApiError struct {
-	Error   bool
-	Message string
-}
-
-type Client struct {
-	ApiKey string
-}
-
-func NewClient(apiKey string) Client {
-	return Client{ApiKey: apiKey}
+func CreateRestClient(apiKey string) RestClient {
+	return RestClient {
+		ApiKey: apiKey,
+	}
 }
 
 func fetch(query string, apiKey string) ([]byte, error) {
@@ -72,7 +28,7 @@ func fetch(query string, apiKey string) ([]byte, error) {
 }
 
 func unableToUnmarshal(response []byte) error {
-	apiError := ApiError{}
+	apiError := RestError{}
 
 	e := json.Unmarshal(response, &apiError)
 
@@ -83,6 +39,7 @@ func unableToUnmarshal(response []byte) error {
 	return errors.New("forex.1forge.com rejected your request: " + apiError.Message)
 }
 
+
 func (u UnlimitedQuota) toQuota() Quota {
 	return Quota{
 		QuotaUsed:       u.QuotaUsed,
@@ -92,7 +49,7 @@ func (u UnlimitedQuota) toQuota() Quota {
 	}
 }
 
-func (c Client) GetQuota() (Quota, error) {
+func (c RestClient) GetQuota() (Quota, error) {
 	result, e := fetch("quota?cache=false", c.ApiKey)
 
 	quota := Quota{}
@@ -117,7 +74,7 @@ func (c Client) GetQuota() (Quota, error) {
 	return quota, unableToUnmarshal(result)
 }
 
-func (c Client) GetSymbols() ([]string, error) {
+func (c RestClient) GetSymbols() ([]string, error) {
 	result, e := fetch("symbols?cache=false", c.ApiKey)
 
 	if e != nil {
@@ -133,7 +90,7 @@ func (c Client) GetSymbols() ([]string, error) {
 	return symbolList, nil
 }
 
-func (c Client) GetQuotes(symbols []string) ([]Quote, error) {
+func (c RestClient) GetQuotes(symbols []string) ([]Quote, error) {
 	result, e := fetch("quotes?pairs="+strings.Join(symbols, ","), c.ApiKey)
 
 	if e != nil {
@@ -149,34 +106,35 @@ func (c Client) GetQuotes(symbols []string) ([]Quote, error) {
 	return quotes, nil
 }
 
-func (c Client) Convert(from string, to string, quantity int) (Conversion, error) {
+func (c RestClient) Convert(from string, to string, quantity int) (ConversionResult, error) {
 	result, e := fetch("convert?from="+from+"&to="+to+"&quantity="+strconv.Itoa(quantity), c.ApiKey)
 
-	Conversion := Conversion{}
+	conversion := ConversionResult{}
 
 	if e != nil {
-		return Conversion, e
+		return conversion, e
 	}
 
-	if json.Unmarshal(result, &Conversion) != nil {
-		return Conversion, unableToUnmarshal(result)
+	if json.Unmarshal(result, &conversion) != nil {
+		return conversion, unableToUnmarshal(result)
 	}
 
-	return Conversion, nil
+	return conversion, nil
 }
 
-func (c Client) MarketIsOpen() (bool, error) {
+func (c RestClient) GetMarketStatus() (MarketStatus, error) {
 	result, e := fetch("market_status?cache=false", c.ApiKey)
-
-	if e != nil {
-		return false, e
-	}
 
 	marketStatus := MarketStatus{}
 
-	if json.Unmarshal(result, &marketStatus) != nil {
-		return false, unableToUnmarshal(result)
+	if e != nil {
+		return marketStatus, e
 	}
 
-	return marketStatus.MarketIsOpen, nil
+
+	if json.Unmarshal(result, &marketStatus) != nil {
+		return marketStatus, unableToUnmarshal(result)
+	}
+
+	return marketStatus, nil
 }
