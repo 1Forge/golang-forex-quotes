@@ -146,7 +146,9 @@ func (c *SocketClient) handleConnect(h *io.Channel) {
 }
 
 func (c *SocketClient) handleUpdate(h *io.Channel, q Quote) {
-	log.Print(q)
+	if c.updateCallback != nil {
+		c.updateCallback(q)
+	}
 }
 
 func (c *SocketClient) Disconnect() {
