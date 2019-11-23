@@ -9,6 +9,9 @@ import (
 	"errors"
 )
 
+const (
+	RestAPIUrl = "http://api.1forge.com"
+)
 func CreateRestClient(apiKey string) RestClient {
 	return RestClient {
 		ApiKey: apiKey,
@@ -16,7 +19,7 @@ func CreateRestClient(apiKey string) RestClient {
 }
 
 func fetch(query string, apiKey string) ([]byte, error) {
-	response, e := http.Get("http://forex.1forge.com/1.0.3/" + query + "&api_key=" + apiKey)
+	response, e := http.Get(RestAPIUrl + query + "&api_key=" + apiKey)
 
 	if e != nil {
 		return nil, e
@@ -36,7 +39,7 @@ func unableToUnmarshal(response []byte) error {
 		return e
 	}
 
-	return errors.New("forex.1forge.com rejected your request: " + apiError.Message)
+	return errors.New(RestAPIUrl + " rejected your request: " + apiError.Message)
 }
 
 
