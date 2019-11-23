@@ -16,9 +16,9 @@ const (
 
 type Quote struct {
 	Symbol    string
-	Bid       float32
-	Ask       float32
-	Price     float32
+	Bid       float64
+	Ask       float64
+	Price     float64
 	Timestamp int
 }
 
@@ -39,7 +39,7 @@ type ForgeClient struct {
 }
 
 type ConversionResult struct {
-	Value     float32
+	Value     float64
 	Text      string
 	Timestamp int
 }
