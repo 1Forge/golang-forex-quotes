@@ -42,7 +42,7 @@ import (
 func main() {
     client := Forex.CreateForgeClient("YOUR_API_KEY")
 
-    symbols := []string{"BTCJPY", "AUDJPY", "GBPCHF"}
+    symbols := []string{"BTC/JPY", "AUD/JPY", "GBP/CHF"}
 
     // Specify the update handler
     client.OnUpdate(func(q Forex.Quote) {
