@@ -1,30 +1,37 @@
 package golang_forex_quotes
 
 import (
-	"net/http"
-	"io/ioutil"
-	"strconv"
 	"encoding/json"
-	"strings"
 	"errors"
+	"io/ioutil"
+	"net/http"
+	"strconv"
+	"strings"
 )
 
 func CreateRestClient(apiKey string) RestClient {
-	return RestClient {
+	return RestClient{
 		ApiKey: apiKey,
 	}
 }
 
 func fetch(query string, apiKey string) ([]byte, error) {
-	response, e := http.Get("http://forex.1forge.com/1.0.3/" + query + "&api_key=" + apiKey)
+	if strings.Count(query, "") > 7683 {
+		// println("String count", strings.Count(query, ""))
+		// err := errors.New("No more than 865 pairs or 1730 curriencies")
+		err := errors.New("No more than 949 pairs or 1898 curriencies")
+		return nil, err
+	} else {
+		response, e := http.Get("https://api.1forge.com/" + query + "&api_key=" + apiKey)
 
-	if e != nil {
-		return nil, e
+		if e != nil {
+			return nil, e
+		}
+
+		defer response.Body.Close()
+
+		return ioutil.ReadAll(response.Body)
 	}
-
-	defer response.Body.Close()
-
-	return ioutil.ReadAll(response.Body)
 }
 
 func unableToUnmarshal(response []byte) error {
@@ -38,7 +45,6 @@ func unableToUnmarshal(response []byte) error {
 
 	return errors.New("forex.1forge.com rejected your request: " + apiError.Message)
 }
-
 
 func (u UnlimitedQuota) toQuota() Quota {
 	return Quota{
@@ -92,7 +98,8 @@ func (c RestClient) GetSymbols() ([]string, error) {
 
 func (c RestClient) GetQuotes(symbols []string) ([]Quote, error) {
 	result, e := fetch("quotes?pairs="+strings.Join(symbols, ","), c.ApiKey)
-
+	s := string(result)
+	println(s)
 	if e != nil {
 		return nil, e
 	}
@@ -104,6 +111,7 @@ func (c RestClient) GetQuotes(symbols []string) ([]Quote, error) {
 	}
 
 	return quotes, nil
+
 }
 
 func (c RestClient) Convert(from string, to string, quantity int) (ConversionResult, error) {
@@ -130,7 +138,6 @@ func (c RestClient) GetMarketStatus() (MarketStatus, error) {
 	if e != nil {
 		return marketStatus, e
 	}
-
 
 	if json.Unmarshal(result, &marketStatus) != nil {
 		return marketStatus, unableToUnmarshal(result)

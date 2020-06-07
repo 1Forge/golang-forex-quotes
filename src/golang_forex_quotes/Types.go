@@ -1,6 +1,8 @@
 package golang_forex_quotes
 
-import io "github.com/graarh/golang-socketio"
+import (
+	socket "github.com/sacOO7/gowebsocket"
+)
 
 const (
 	LOGIN                = "login"
@@ -15,16 +17,16 @@ const (
 )
 
 type Quote struct {
-	Symbol    string
-	Bid       float32
-	Ask       float32
-	Price     float32
-	Timestamp int
+	Symbol string  `json:"s"`
+	Bid    float32 `json:"b"`
+	Ask    float32 `json:"a"`
+	Price  float32 `json:"p"`
+	Time   int     `json:"t"`
 }
 
 type SocketClient struct {
 	ApiKey               string
-	IO                   *io.Client
+	socket               *socket.Socket
 	connectCallback      func()
 	disconnectCallback   func()
 	messageCallback      func(string)
