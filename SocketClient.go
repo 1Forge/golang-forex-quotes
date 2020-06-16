@@ -2,7 +2,7 @@ package golang_forex_quotes
 
 import (
 	"encoding/json"
-	"fmt"
+	// "fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -25,7 +25,7 @@ func (c *SocketClient) Connect() {
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt)
 
-	socket := gowebsocket.New("wss://betaws.1forge.com/socket")
+	socket := gowebsocket.New("wss://sockets.1forge.com/socket")
 	// socket.EnableLogging()
 
 	socket.OnConnectError = func(err error, socket gowebsocket.Socket) {
@@ -33,7 +33,7 @@ func (c *SocketClient) Connect() {
 	}
 
 	socket.OnConnected = func(socket gowebsocket.Socket) {
-		log.Println("Connected to server")
+		// log.Println("Connected to server")
 		socket.SendText(LOGIN + "|" + c.ApiKey)
 	}
 
@@ -45,13 +45,13 @@ func (c *SocketClient) Connect() {
 		case UPDATE:
 			var quotes Quote
 			json.Unmarshal([]byte(parts[1]), &quotes)
-			fmt.Printf("%+v", quotes)
+			// fmt.Printf("%+v", quotes)
 			c.handleUpdate(quotes)
 		case MESSAGE:
 			c.handleMessage(message)
 		default:
 			log.Println(parts)
-			log.Println("Received message - " + message)
+			// log.Println("Received message - " + message)
 		}
 	}
 
@@ -96,7 +96,7 @@ func (c *SocketClient) OnLoginSuccess(callback func()) {
 
 func (c *SocketClient) SubscribeTo(symbols []string) {
 	for _, symbol := range symbols {
-		log.Println("Subscribing: ", symbol)
+		// log.Println("Subscribing: ", symbol)
 		c.socket.SendText(SUBSCRIBE_TO + "|" + symbol)
 	}
 }

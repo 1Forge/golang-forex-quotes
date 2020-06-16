@@ -99,7 +99,7 @@ func (c RestClient) GetSymbols() ([]string, error) {
 func (c RestClient) GetQuotes(symbols []string) ([]Quote, error) {
 	result, e := fetch("quotes?pairs="+strings.Join(symbols, ","), c.ApiKey)
 	s := string(result)
-	println(s)
+	// println(s)
 	if e != nil {
 		return nil, e
 	}
